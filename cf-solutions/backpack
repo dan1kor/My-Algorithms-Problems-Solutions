@@ -1,0 +1,33 @@
+def backpack(m: int, c: list[int], w: list[int]) -> list[int]:
+    dp = [[-1 for _ in range(m + 1)] for _ in range(len(w))]
+    dp[0][0] = 0
+    p = [[-1 for _ in range(m + 1)] for _ in range(len(w))]
+
+    for i in range(1, len(w)):
+        wi, ci = w[i], c[i]
+        for j in range(m + 1):
+            dp[i][j] = dp[i - 1][j]
+            p[i][j] = (i - 1, j)
+            if j - wi >= 0 and dp[i - 1][j - wi] != -1:
+                if dp[i - 1][j - wi] + ci > dp[i][j]:
+                    dp[i][j] = dp[i - 1][j - wi] + ci
+                    p[i][j] = (i - 1, j - wi)
+
+    tools = []
+    i, j = len(w) - 1, dp[-1].index(max(dp[-1]))
+    while i != 0 and j != 0:
+        if dp[i - 1][j] != dp[i][j]:
+            tools.append(i)
+        i, j = p[i][j]
+
+    return tools
+
+
+def main():
+    n, m = map(int, input().split())
+    w = [0] + [int(i) for i in input().split()]
+    c = [0] + [int(i) for i in input().split()]
+
+    print(*sorted(backpack(m, c, w)), sep='\n')
+
+main()
