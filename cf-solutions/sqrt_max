@@ -1,0 +1,43 @@
+def main():
+    n = int(input())
+    *arr, = map(int, input().split())
+    t = int(input())
+    req = []
+
+    size_block = int(n ** (1 / 2)) + 1
+    block = [-float('inf') for _ in range(n // size_block + 1)]
+    for i in range(len(arr)):
+        block[i // size_block] = max(block[i // size_block], arr[i])
+
+    def edit_sqrt(i: int):
+        block_i = i // size_block
+        block[block_i] = -float('inf')
+        end = block_i * size_block + size_block
+        if end > len(arr):
+            end = n
+        for j in range(block_i * size_block, end):
+            block[block_i] = max(block[block_i], arr[j])
+
+    def request_max(l: int, r: int) -> int:
+        m = -float('inf')
+        while l <= r:
+            if l // size_block != r // size_block and l % size_block == 0:
+                m = max(m, block[l // size_block])
+                l += size_block
+            else:
+                m = max(m, arr[l])
+                l += 1
+        return m
+
+    for i in range(t):
+        command, arg1, arg2 = input().split()
+        arg1, arg2 = int(arg1), int(arg2)
+        if command == 'u':
+            arr[arg1 - 1] = arg2
+            edit_sqrt(arg1 - 1)
+        else:
+            req.append(request_max(arg1 - 1, arg2 - 1))
+    print(*req)
+
+
+main()
