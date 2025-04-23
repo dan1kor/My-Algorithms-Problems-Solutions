@@ -1,0 +1,84 @@
+// https://codeforces.com/group/wyPzErCQ4e/contest/601504/problem/C
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+unsigned char cycle = '*';
+vector<pair<int, int>> steps = {
+    {-1, 0},
+    {+1, 0},
+    {0, -1},
+    {0, +1}
+};
+string path = "";
+
+vector<string> field;
+
+bool FOUND = false;
+
+bool Can(int i, int j) {
+    if (0 <= i && i < field.size() && 0 <= j && j < field[0].size()) {
+        return field[i][j] != '.';
+    }
+    return false;
+}
+
+void dfs(int i, int j, string curr_path) {
+    if (FOUND) return;
+    
+
+    if (field[i][j] != 'S') field[i][j] = '.';
+
+    for (const auto& [di, dj] : steps) {
+        char dir;
+        if (di == -1) dir = 'U';
+        else if (di == 1) dir = 'D';
+        else if (dj == -1) dir = 'L';
+        else dir = 'R';
+
+        if (Can(i + di, j + dj)) {
+
+            if (field[i + di][j + dj] == 'S' && curr_path.size() + 1 >= 4) {
+                path = curr_path + dir;
+                FOUND = true;
+                return;
+            }
+
+            if (field[i + di][j + dj] == 'S' && curr_path.size() < 4) continue;
+
+            dfs(i + di, j + dj, curr_path + dir);
+            if (FOUND) return;
+        }
+    }
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
+    size_t n = 0, m = 0;
+    cin >> n >> m;
+
+    field.reserve(n);
+
+    int s_i = -1, s_j = -1;
+    for (size_t i = 0; i < n; ++i) {
+        string s;
+        cin >> s;
+
+        field.push_back(s);
+
+        if (s_i == -1 && field[i].find('S') != string::npos) {
+            s_i = i;
+            s_j = field[i].find('S');
+        }
+    }
+
+    dfs(s_i, s_j, "");
+
+    cout << path;
+}
