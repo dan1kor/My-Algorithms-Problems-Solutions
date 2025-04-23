@@ -1,0 +1,15 @@
+f = open("input.txt")
+f_ex = open("output.txt", "a")
+data = f.readlines()
+
+n = int(data[0])
+nums = sorted(list(map(int, data[1].split())))
+lb, rb = 0, 0
+min_del_el = n
+while lb < n:
+    while rb < n and nums[rb] <= nums[lb] * 2:
+        rb += 1
+    if n - (rb - lb) < min_del_el:
+        min_del_el = n - (rb - lb)
+    lb += 1
+f_ex.write(str(min_del_el))
