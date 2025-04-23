@@ -1,0 +1,59 @@
+// https://codeforces.com/group/wyPzErCQ4e/contest/603243/problem/C
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+vector<vector<int>> steps = {
+    {0, 0, 1},
+    {-1, 0, 0},
+    {1, 0, 0},
+    {0, 1, 0},
+    {0, -1, 0},
+    {0, 0, -1}
+};
+
+int t = 0;
+
+bool CanMove(const vector<vector<string>>& plate, int x, int y, int z) {
+    if (x >= 0 && x < plate[0][0].size() && y >= 0 && y < plate[0].size() && z >= 0 
+                    && z < plate.size() && plate[z][y][x] == '.') {
+                        return true;
+    }
+    return false;
+}
+
+void dfs(vector<vector<string>>& plate, int x, int y, int z = 0) {
+    ++t;
+    plate[z][y][x] = '#';
+
+    for (const auto& step : steps) {
+        int dx = step[0], dy = step[1], dz = step[2];
+
+        if (CanMove(plate, x + dx, y + dy, z + dz)) {
+            dfs(plate, x + dx, y + dy, z + dz);
+        }
+    }
+}
+
+int main() {
+    size_t k = 0, n = 0, m = 0;
+    cin >> k >> n >> m;
+    
+    vector<vector<string>> plate(k, vector<string>(n));
+    for (size_t i = 0; i < k; ++i) {
+        for (size_t j = 0; j < n; ++j) {
+            cin >> plate[i][j];
+        }
+    }
+
+    int x = 0, y = 0;
+    cin >> y >> x;
+    --x, --y;
+
+    dfs(plate, x, y);
+
+    cout << t;
+}
