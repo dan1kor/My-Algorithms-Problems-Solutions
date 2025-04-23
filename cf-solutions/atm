@@ -1,0 +1,34 @@
+def atm(noms: list[int], n: int):
+    dp = [10 ** 19 + 1 for _ in range(n + 1)]
+    dp[0] = 0
+
+    p = [-1 for _ in range(n + 1)]
+
+    for cur_nom in noms:
+        for top in range(cur_nom, n + 1):
+            if dp[top - cur_nom] + 1 < dp[top]:
+                dp[top] = dp[top - cur_nom] + 1
+                p[top] = cur_nom
+
+    if dp[n] == 10 ** 19 + 1:
+        return -1, []
+
+    result = []
+    while n > 0:
+        result.append(p[n])
+        n -= p[n]
+
+    return len(result), result
+
+
+def main():
+    k = int(input())
+    nominals = list(map(int, input().split()))
+    n = int(input())
+
+    ans, noms = atm(nominals, n)
+    print(ans)
+    print(*noms)
+
+
+main()
