@@ -1,3 +1,5 @@
+# https://codeforces.com/group/wyPzErCQ4e/contest/563329/problem/D
+
 f = open("input.txt")
 f_ex = open("output.txt", "a")
 data = f.readlines()
