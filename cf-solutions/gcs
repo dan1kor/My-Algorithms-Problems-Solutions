@@ -1,0 +1,54 @@
+def gcs(s1: str, s2: str):
+    dp = [[0 for _ in range(len(s1))] for _ in range(len(s2))]
+    p = [[-1 for _ in range(len(s1))] for _ in range(len(s2))]
+
+    m_i, m_j = 0, 0
+    m = -1
+
+    for i in range(1, len(s2)):
+        for j in range(1, len(s1)):
+            if s1[j] == s2[i]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+                p[i][j] = (i - 1, j - 1)
+
+                if dp[i][j] > m:
+                    m_i, m_j = i, j
+                    m = dp[i][j]
+            elif dp[i - 1][j] >= dp[i][j - 1]:
+                dp[i][j] = dp[i - 1][j]
+                p[i][j] = (i - 1, j)
+            else:
+                dp[i][j] = dp[i][j - 1]
+                p[i][j] = (i, j - 1)
+
+    return m, m_i, m_j, p
+
+
+ind_s1, ind_s2 = [], []
+
+
+def print_gcs(i: int, j: int, p: list[int]):
+    if i == 0 or j == 0:
+        return
+    if p[i][j] == (i - 1, j - 1):
+        print_gcs(i - 1, j - 1, p)
+        ind_s1.append(j)
+        ind_s2.append(i)
+    else:
+        print_gcs(*p[i][j], p)
+
+
+def main():
+    s1 = '#' + input()
+    s2 = '#' + input()
+
+    ans, i, j, p = gcs(s1, s2)
+
+    print(ans)
+    print_gcs(i, j, p)
+
+    print(*ind_s1)
+    print(*ind_s2)
+
+
+main()
