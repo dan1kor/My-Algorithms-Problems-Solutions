@@ -1,0 +1,39 @@
+// https://codeforces.com/group/wyPzErCQ4e/contest/601504/problem/F
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+using ll = long long;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
+    size_t n;
+    cin >> n;
+
+    vector<int> a(n);
+    vector<ll> prefix(n + 1);
+    ll sum = 0;
+    for (size_t i = 0; i < n; ++i) {
+        cin >> a[i];
+        sum += a[i];
+
+        prefix[i + 1] = a[i] + prefix[i];
+    }
+
+    if ((n >= 3 && sum % 3 != 0) || n < 3) { cout << 0; return 0; }
+    
+    ll third = sum / 3;
+    ll thirdEntries = 0;
+    ll res = 0;
+    for (size_t i = 1; i < n; ++i) {
+        if (prefix[i] == 2 * third) res += thirdEntries;
+        if (prefix[i] == third) ++thirdEntries;
+    }
+
+    cout << res;
+}
