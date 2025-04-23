@@ -1,0 +1,22 @@
+def count_dist(stalls: list[int], k: int) -> int:
+    l, r = 0, stalls[-1]
+    while l < r:
+        d = (l + r) // 2
+        first = stalls[0]
+        cows, i = 1, 1
+        while i < len(stalls):
+            if stalls[i] - first > d:
+                cows += 1
+                first = stalls[i]
+            i += 1
+        if cows < k:
+            r = d
+        else:
+            l = d + 1
+    return l
+
+
+n, k = map(int, input().split())
+stalls = list(map(int, input().split()))
+print(count_dist(stalls, k))
+
