@@ -1,0 +1,31 @@
+# https://codeforces.com/group/wyPzErCQ4e/contest/565347/problem/C
+
+def play_with_gcd(n: int, gcds: list[int]) -> str:
+    b = [0 for _ in range(n + 1)]
+    b[0] = gcds[0]
+    b[-1] = gcds[-1]
+    for i in range(1, n):
+        b[i] = gcds[i] // gcd(gcds[i], gcds[i - 1]) * gcds[i - 1]
+        if gcd(b[i], b[i - 1]) != gcds[i - 1]:
+            return 'NO'
+    return 'YES'
+
+
+def gcd(a: int, b: int) -> int:
+    if b == 0:
+        return a
+    return gcd(b, a % b)
+
+
+def main():
+    t = int(input())
+    res = [0 for _ in range(t)]
+    for i in range(t):
+        n = int(input())
+        a = list(map(int, input().split()))
+        res[i] = play_with_gcd(n, a)
+
+    print(*res, sep='\n')
+
+
+main()
