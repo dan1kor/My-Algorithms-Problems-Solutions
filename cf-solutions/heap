@@ -1,0 +1,56 @@
+from sys import stdin
+
+
+def main():
+    commands = stdin.readlines()
+    heap = []
+
+    def clear() -> None:
+        heap.clear()
+
+    def add(value: int) -> None:
+        heap.append(value)
+        siftUp(len(heap) - 1)
+
+    def extract() -> None:
+        if not heap:
+            print('CANNOT')
+            return
+        print(heap[0])
+        heap[0] = heap[-1]
+        heap.pop()
+        if heap:
+            siftDown(0)
+
+    def siftUp(index: int) -> None:
+        if index == 0:
+            return
+        p = (index - 1) // 2
+        if heap[index] < heap[p]:
+            heap[p], heap[index] = heap[index], heap[p]
+            siftUp(p)
+
+    def siftDown(index: int) -> None:
+        left = 2 * index + 1
+        right = 2 * index + 2
+        if right > len(heap):
+            return
+        if right == len(heap):
+            right = left
+
+        imin = left if heap[left] < heap[right] else right
+        if heap[imin] < heap[index]:
+            heap[imin], heap[index] = heap[index], heap[imin]
+            siftDown(imin)
+
+    for i in commands:
+        com = i.split()
+        if len(com) == 2:
+            add(int(com[1]))
+        elif com[0] == 'CLEAR':
+            clear()
+        else:
+            extract()
+
+
+main()
