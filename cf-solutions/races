@@ -1,0 +1,40 @@
+cnt = 0
+n, l = map(int, input().split())
+
+
+def merge(a: list[int], b: list[int]) -> list[int]:
+    global cnt
+    global l
+
+    c = [0] * (len(a) + len(b))
+    i = j = 0
+    while i < len(a) or j < len(b):
+        if i == len(a):
+            c[i + j] = b[j]
+            j += 1
+        elif j == len(b):
+            c[i + j] = a[i]
+            i += 1
+        elif a[i] > b[j]:
+            c[i + j] = b[j]
+            j += 1
+            cnt += len(a) - i
+        else:
+            c[i + j] = a[i]
+            i += 1
+    return c
+
+
+def merge_sort(arr: list[int]) -> list[int]:
+    if len(arr) < 2:
+        return arr
+    mid = len(arr) // 2
+    return merge(merge_sort(arr[:mid]), merge_sort(arr[mid:]))
+
+
+arr = list(map(int, input().split()))
+for i in range(len(arr)):
+    arr[i] = arr[i] * l + i
+
+merge_sort(arr)
+print(cnt)
