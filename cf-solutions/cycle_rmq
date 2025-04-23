@@ -1,0 +1,82 @@
+# https://codeforces.com/group/wyPzErCQ4e/contest/572201/problem/B
+
+import math
+
+
+def read_int():
+    return int(input())
+
+
+def read_int_array():
+    return list(map(int, input().split()))
+
+
+def print_arr(arr):
+    print(" ".join(map(str, arr)))
+
+
+def create_nm_array(n, m, init=0):
+    return [[init for j in range(m)] for i in range(n)]
+
+
+class SqrtDecomposition:
+    def __init__(self, elements):
+        self.n = len(elements)
+        self.sqrt = max(1, int(math.sqrt(self.n)))
+        self.upper = [0] * ((self.n + self.sqrt - 1) // self.sqrt)
+        self.lower = [i for i in elements]
+        for i in range(len(self.upper)):
+            self.update_upper_value(i)
+
+    def update_upper_value(self, pos):
+        self.upper[pos] = 0
+        for i in range(pos * self.sqrt, min(self.n, (pos + 1) * self.sqrt)):
+            self.upper[pos] = max(self.upper[pos], self.lower[i])
+
+    def update(self, pos, val):
+        upper_idx = pos // self.sqrt
+        self.lower[pos] = val
+        self.update_upper_value(upper_idx)
+
+    def get_lower_sum(self, l, r):
+        res = 0
+        for i in range(l, r + 1):
+            res = max(self.lower[i], res)
+        return res
+
+    def get_upper_sum(self, l, r):
+        res = 0
+        for i in range(l, r + 1):
+            res = max(self.upper[i], res)
+        return res
+
+    def get(self, l, r):
+        l_upper_idx = l // self.sqrt
+        r_upper_idx = r // self.sqrt
+        if l_upper_idx == r_upper_idx:
+            return self.get_lower_sum(l, r)
+        else:
+            return max(self.get_lower_sum(l, (l_upper_idx + 1) * self.sqrt - 1),
+                       self.get_lower_sum(r_upper_idx * self.sqrt, r),
+                       self.get_upper_sum(l_upper_idx + 1, r_upper_idx - 1))
+
+
+def solve():
+    n = read_int()
+    a = read_int_array()
+    dec = SqrtDecomposition(a)
+
+    answers = []
+    k = read_int()
+    for i in range(k):
+        q, l, r = input().split()
+        l, r = int(l), int(r)
+        if q == "u":
+            dec.update(l - 1, r)
+        else:
+            answers.append(dec.get(l - 1, r - 1))
+
+    print_arr(answers)
+
+
+solve()
