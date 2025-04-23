@@ -1,0 +1,41 @@
+# https://codeforces.com/group/wyPzErCQ4e/contest/568765/problem/C
+
+def kinzhal(a: list[int], h: int):
+    l, r = -1, 10 ** 19 + 1
+    while l + 1 < r:
+        k = (r + l) // 2
+        if does_he_kill_dragon(a, h, k):
+            r = k
+        else:
+            l = k
+
+    return r
+
+
+def does_he_kill_dragon(a: list[int], h: int, k: int):
+    damage = 0
+    last = a[0]
+    for cur in a[1:]:
+        if cur - last > k:
+            damage += k
+        else:
+            damage += cur - last
+        last = cur
+    damage += k
+    return damage >= h
+
+
+def main():
+    t = int(input())
+    res = [0 for _ in range(t)]
+
+    for i in range(t):
+        n, h = map(int, input().split())
+        *a, = map(int, input().split())
+
+        res[i] = kinzhal(a, h)
+
+    print(*res, sep='\n')
+
+
+main()
