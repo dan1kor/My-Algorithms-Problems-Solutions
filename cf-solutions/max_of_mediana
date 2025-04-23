@@ -1,0 +1,47 @@
+// https://codeforces.com/group/wyPzErCQ4e/contest/568765/problem/A
+
+#include <iostream>
+#include <vector>
+
+bool IsItPossible(int n, int s, int m) {
+    int pos = (n % 2 == 0 ? n / 2 - 1 : n / 2);
+    long long sum = (long long)m * (n - pos);
+    
+    return sum <= s;
+}   
+
+int solve(int n, int s) {
+    if (n == 1) return s;
+
+    int l = 0, r = s;
+    while (l + 1 < r) {
+        int m = (l + r + 1) / 2;
+
+        if (IsItPossible(n, s, m)) {
+            l = m;
+        } else {
+            r = m;
+        }
+    }
+
+    return l;
+}
+
+int main() {
+    int t;
+    std::cin >> t;
+
+    std::vector<int> res;
+    res.reserve(t);
+
+    for (int i = 0; i < t; ++i) {
+        int n, s;
+        std::cin >> n >> s;
+
+        res.push_back(solve(n, s));
+    }
+
+    for (const auto& r : res) {
+        std::cout << r << '\n';
+    }
+}
