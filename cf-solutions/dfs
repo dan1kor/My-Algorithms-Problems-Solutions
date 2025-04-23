@@ -1,0 +1,36 @@
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+void dfs(vector<vector<int>>& edges, vector<int>& used, vector<int>& path, int v) {
+    used[v] = 1;
+    path.push_back(v);
+    for (auto to : edges[v]) {
+        if (used[to] == 0) {
+            dfs(edges, used, path, to);
+            path.push_back(v);
+        }
+    }
+}
+
+int main() {
+    size_t n = 0, m = 0, v = 0;
+    cin >> n >> m >> v;
+
+    vector<vector<int>> edges(n + 1);
+    for (size_t i = 0; i < m; ++i) {
+        int out = 0, in = 0;
+        cin >> out >> in;
+
+        edges[out].push_back(in);
+        edges[in].push_back(out);
+    }
+
+    vector<int> used(n + 1);
+    vector<int> path;
+    dfs(edges, used, path, v);
+
+    cout << path.size() << '\n';
+    for (int i : path) cout << i << ' ';
+}
